@@ -38,13 +38,13 @@ print("Deck has "+str(deck.cardCount())+" cards")
 # todo Using .decode('utf-8'), I no longer get 'duplicate card' errors :p
 print("Make a new Card for: "+card_front)
 fact            = deck.newNote()
-fact['Front']   = card_front.decode('utf-8')
-fact['Back']    = card_back.decode('utf-8')
+fact['Front']   = card_front
+fact['Back']    = card_back
 
 # Add Card to the Deck
 try:
     deck.addNote( fact )
-except Exception, e:
+except(Exception, e):
     if hasattr(e, "data"):
         sys.exit("ERROR: Could not add '"+e.data['field']+"': "+e.data['type'])
     else:
