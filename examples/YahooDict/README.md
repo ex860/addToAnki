@@ -8,6 +8,7 @@ Requirement
 - python3
 - BeautifulSoup
 - pip3 install lxml
+
 Content
 -------
 - Front Card:
