@@ -1,6 +1,7 @@
 import urllib.request;
 from bs4 import BeautifulSoup
 import subprocess
+import platform
 
 Collection="/Users/hwchiu/Library/Application Support/Anki2/User 1/collection.anki2"
 Deck="Novel"
@@ -28,7 +29,10 @@ def look_up_from_yahoo(word):
     print('back_card={}'.format(back_word))
     if 0 == len(back_word):
         return
-    subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word])
+    if "Windows" == platform.system():
+        subprocess.run(['python', Anki, Collection, Deck, front_word, back_word])
+    else:
+        subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word])
 with open("./input", "r") as file:
     for word in file:
         look_up_from_yahoo(word)
