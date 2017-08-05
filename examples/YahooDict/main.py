@@ -3,12 +3,13 @@ from bs4 import BeautifulSoup
 import subprocess
 import platform
 import datetime
+import json
 
 Collection="C:/Users/hwchiu/AppData/Roaming/Anki2/hwchiu/collection.anki2"
 Deck="Test"
 Anki="../../add_to_anki-2.0.12.py"
 
-def look_up_from_yahoo(word):
+def look_up_from_yahoo(word, Collection, Deck):
     """This function will lookup the @input(word) from the yahoo dict"""
     url="https://tw.dictionary.yahoo.com/dictionary?p={}".format(word)
     content = urllib.request.urlopen(url).read()
@@ -36,11 +37,15 @@ def look_up_from_yahoo(word):
         subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word])
 
 count=0
-start_time=datetime.datetime.now().replace(microsecond=0)        
-with open("./input", "r") as file:
-    for word in file:
-        count += 1
-        look_up_from_yahoo(word)
+with open('config.json') as data_file:
+    data = json.load(data_file)
+
+start_time=datetime.datetime.now().replace(microsecond=0)
+for profile in data["profiles"]:
+    with open(profile["file"], "r") as file:
+        for word in file:
+            count += 1
+            look_up_from_yahoo(word, profile["collection"], profile["deck"])
 
 end_time=datetime.datetime.now().replace(microsecond=0)
 print("--------------------------")        

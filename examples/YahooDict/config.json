@@ -1,0 +1,9 @@
+{
+    "profiles": [
+ 	 	{
+	        "file":"input",
+	        "deck":"test",
+	        "collection":"C:/Users/hwchiu/AppData/Roaming/Anki2/hwchiu/collection.anki2"
+	   	}
+    ]
+}
