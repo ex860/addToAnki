@@ -2,9 +2,10 @@ import urllib.request;
 from bs4 import BeautifulSoup
 import subprocess
 import platform
+import datetime
 
-Collection="/Users/hwchiu/Library/Application Support/Anki2/User 1/collection.anki2"
-Deck="Novel"
+Collection="C:/Users/hwchiu/AppData/Roaming/Anki2/hwchiu/collection.anki2"
+Deck="Test"
 Anki="../../add_to_anki-2.0.12.py"
 
 def look_up_from_yahoo(word):
@@ -33,6 +34,15 @@ def look_up_from_yahoo(word):
         subprocess.run(['python', Anki, Collection, Deck, front_word, back_word])
     else:
         subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word])
+
+count=0
+start_time=datetime.datetime.now().replace(microsecond=0)        
 with open("./input", "r") as file:
+    count += 1
     for word in file:
         look_up_from_yahoo(word)
+
+end_time=datetime.datetime.now().replace(microsecond=0)
+print("--------------------------")        
+print("Takes {} to add {} cards".format(end_time - start_time ,count))
+input("Press any key to exit")
