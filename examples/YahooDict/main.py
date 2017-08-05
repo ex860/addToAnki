@@ -38,8 +38,8 @@ def look_up_from_yahoo(word):
 count=0
 start_time=datetime.datetime.now().replace(microsecond=0)        
 with open("./input", "r") as file:
-    count += 1
     for word in file:
+        count += 1
         look_up_from_yahoo(word)
 
 end_time=datetime.datetime.now().replace(microsecond=0)
