@@ -16,3 +16,7 @@ Content
 	- pronunciation
 - Back Card
     - explain
+
+Installation
+------------
+Refer to [tutorial](hwchiu.com/anki-tutorial.html)
