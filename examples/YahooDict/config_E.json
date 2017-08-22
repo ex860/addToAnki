@@ -1,0 +1,9 @@
+{
+    "profiles": [
+ 	 	{
+	        "file":"input_E",
+	        "deck":"英文",
+	        "collection":"/home/yu/.local/share/Anki2/YuHsien/collection.anki2"
+	   	}
+    ]
+}

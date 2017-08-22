@@ -23,7 +23,9 @@ deckId = deck.decks.id( deck_name )
 
 # todo Not sure why a simple 'select' doesnt do the model stuff for me...
 deck.decks.select( deckId )
-basic_model = deck.models.byName('Basic')
+# Select the adequate language of your type of card
+basic_model = deck.models.byName('基本型(含反向的卡片)') 
+# basic_model = deck.models.byName('Basic (and reversed card)')
 basic_model['did'] = deckId
 deck.models.save( basic_model )
 deck.models.setCurrent( basic_model )
@@ -37,9 +39,10 @@ print("Deck has "+str(deck.cardCount())+" cards")
 # Build the card
 # todo Using .decode('utf-8'), I no longer get 'duplicate card' errors :p
 print("Make a new Card for: "+card_front)
-fact            = deck.newNote()
-fact['Front']   = card_front
-fact['Back']    = card_back
+fact = deck.newNote()
+# Select the adequate language of your type of card
+fact['正面'] = card_front # fact['Front'] = card_front
+fact['背面'] = card_back  # fact['Back'] = card_front
 
 # Add Card to the Deck
 try:
