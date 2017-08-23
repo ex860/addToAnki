@@ -36,7 +36,8 @@ def look_up_from_yahoo(word, Collection, Deck):
     POScont = explain.find_all('ul', class_='compArticleList')
     for i in range(0,len(POScont)):
         cnt = 1
-        front_word = front_word + partOfSpeech[i].get_text() + "<br>"
+        POSclean = '(' + partOfSpeech[i].get_text().split('.')[0] + '.)'
+        front_word = front_word + POSclean + "<br>"
         for j in POScont[i].find_all('span', id='example', class_='example'):
             if(len(j.contents) > 3):
                 front_word = front_word + str(cnt) + '. ' + j.contents[0]+j.contents[1].get_text()+j.contents[2] + '<br>'
@@ -44,7 +45,7 @@ def look_up_from_yahoo(word, Collection, Deck):
             elif(len(j.contents) == 3):
                 front_word = front_word + str(cnt) + '. ' + j.contents[0].get_text()+j.contents[1] + '<br>'
                 cnt = cnt + 1 
-        back_word = back_word + partOfSpeech[i].get_text() + "<br>"
+        back_word = back_word + POSclean + "<br>"
         for j in POScont[i].find_all('h4'):
             back_word = back_word + j.get_text() + '<br>'
     print("")
