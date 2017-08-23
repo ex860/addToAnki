@@ -48,12 +48,12 @@ def look_up_from_yahoo(word, Collection, Deck):
         subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word])
 
 count=0
-with open('config_J.json') as data_file:
+with open('config_J.json', encoding='utf-8') as data_file:
     data = json.load(data_file)
 
 start_time=datetime.datetime.now().replace(microsecond=0)
 for profile in data["profiles"]:
-    with open(profile["file"], "r") as file:
+    with open(profile["file"], "r", encoding='utf-8') as file:
 		# Get the word from each line in file
         for word in file:
             count += 1
