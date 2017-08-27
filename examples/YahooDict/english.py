@@ -7,7 +7,7 @@ import datetime
 import json
 import wget
 
-Download_dir="/home/yu/.local/share/Anki2/YuHsien/collection.media/"
+Download_dir="C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.media/"
 Anki="../../addToAnkiEnglish.py"
 
 def look_up_from_yahoo(word, Collection, Deck):
@@ -44,6 +44,8 @@ def look_up_from_yahoo(word, Collection, Deck):
                 cnt = cnt + 1 
             elif(len(j.contents) == 3):
                 front_word = front_word + str(cnt) + '. ' + j.contents[0].get_text()+j.contents[1] + '<br>'
+                cnt = cnt + 1 
+            else:
                 cnt = cnt + 1 
         back_word = back_word + POSclean + "<br>"
         for j in POScont[i].find_all('h4'):
