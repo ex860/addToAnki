@@ -7,7 +7,8 @@ import datetime
 import json
 import wget
 
-Download_dir="C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.media/"
+# Download_dir="C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.media/"
+Download_dir="/home/yu/.local/share/Anki2/YuHsien/collection.media/"
 Anki="../../addToAnkiEnglish.py"
 
 def look_up_from_yahoo(word, Collection, Deck):
