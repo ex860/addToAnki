@@ -53,6 +53,7 @@ def look_up_from_yahoo(word, Collection, Deck):
             front_word = front_word + str(cnt) + '. '
             for k in range(0,len(j.contents)-1):
                 front_word += j.contents[k].string
+            front_word += "<br>"
             cnt = cnt + 1 
         back_word = back_word + POSclean
         for j in POScont[i].find_all('h4'):
