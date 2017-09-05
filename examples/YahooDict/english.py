@@ -26,16 +26,22 @@ def look_up_from_yahoo(word, Collection, Deck):
     print(" ")
     # Get the URL of the sound media
     sound = json.loads(soup.find('span', id='iconStyle').get_text())
-    # Download the sound media and store at the specific directory (%username%/collection.media) 
-    # with a specific file name (Py_%word%.mp3)
-    wget.download(sound['sound_url_1'][0]["mp3"], out=Download_dir+"Py_"+word+".mp3")
+    
+    # Download the sound media and store at the specific directory (%username%/collection.media) and with a specific file name (Py_%word%.mp3)
+    for soundCnt in range(0,len(sound['sound_url_1'])):
+        if(bool(sound['sound_url_1'][soundCnt]) == True):
+            wget.download(sound['sound_url_1'][soundCnt]["mp3"], out=Download_dir+"Py_"+word+".mp3")
+            break
+
     # Insert the sound media into the card
     front_word = "[sound:Py_"+word+".mp3]" + word + "<br>"
 
     explain = soup.find('div', class_='explain')
     partOfSpeech = explain.find_all('div', class_='compTitle')
+
     # POScont => the content of part of speech 
     POScont = explain.find_all('ul', class_='compArticleList')
+
     for i in range(0,len(POScont)):
         cnt = 1
         if(len(partOfSpeech) == 0):
@@ -44,10 +50,9 @@ def look_up_from_yahoo(word, Collection, Deck):
             POSclean = '(' + partOfSpeech[i].get_text().split('.')[0] + '.)' + "<br>"
         front_word = front_word + POSclean
         for j in POScont[i].find_all('span', id='example', class_='example'):
-            if(len(j.contents) > 3):
-                front_word = front_word + str(cnt) + '. ' + j.contents[0]+j.contents[1].get_text()+j.contents[2] + '<br>'
-            elif(len(j.contents) == 3):
-                front_word = front_word + str(cnt) + '. ' + j.contents[0].get_text()+j.contents[1] + '<br>'
+            front_word = front_word + str(cnt) + '. '
+            for k in range(0,len(j.contents)-1):
+                front_word += j.contents[k].string
             cnt = cnt + 1 
         back_word = back_word + POSclean
         for j in POScont[i].find_all('h4'):
