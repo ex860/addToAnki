@@ -19,17 +19,37 @@ def look_up_from_yahoo(word, Collection, Deck):
     soup = BeautifulSoup(content, 'lxml')
     front_word = ""
     back_word = ""
+    reading = ""
     cnt = 0
 
-    print(" ")
+    print("-------------------------------------------------------------")
     print('<<'+word+'>>')
     print(" ")
 
     for i in soup.find_all('div', class_='exact_block'):
-        first = i.find('div', class_='concept_light clearfix')
-        for j in first.find_all('span', class_='text'):
+
+        firstBlock = i.find('div', class_='concept_light clearfix')
+        partJP = firstBlock.find('div', class_='concept_light-wrapper')
+        partEN = firstBlock.find('div', class_='concept_light-meanings')
+
+        for j in partJP.find_all('span', class_='furigana'):
+            cntt = 0
+            for child in j.children:
+                print(cntt)
+                print(child)
+                cntt = cntt + 1
+        for j in partJP.find_all('span', class_='text'):
+            cntt = 0
+            for child in j.children:
+                print(cntt)
+                print(child)
+                cntt = cntt + 1
             front_word += j.get_text()
-        for j in first.find_all('div', class_="meanings-wrapper"):
+
+
+
+
+        for j in partEN.find_all('div', class_="meanings-wrapper"):
             for k in j.find_all('div', class_="meaning-wrapper"):
                 cnt = cnt + 1
                 back_word += str(cnt)
@@ -42,10 +62,10 @@ def look_up_from_yahoo(word, Collection, Deck):
     print('back_card='+back_word)
     if 0 == len(back_word):
         return
-    if "Windows" == platform.system():
-        subprocess.run(['python', Anki, Collection, Deck, front_word, back_word])
-    else:
-        subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word])
+    # if "Windows" == platform.system():
+    #     subprocess.run(['python', Anki, Collection, Deck, front_word, back_word, reading])
+    # else:
+    #     subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word, reading])
 
 count=0
 with open('config_J.json', encoding='utf-8') as data_file:
@@ -60,5 +80,5 @@ for profile in data["profiles"]:
             look_up_from_yahoo(word, profile["collection"], profile["deck"])
 
 end_time=datetime.datetime.now().replace(microsecond=0)
-print("--------------------------")        
+print("-------------------------------------------------------------")        
 print("Takes {} to add {} cards".format(end_time - start_time ,count))
