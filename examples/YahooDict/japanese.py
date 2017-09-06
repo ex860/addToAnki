@@ -5,9 +5,8 @@ import subprocess
 import platform
 import datetime
 import json
+import re
 
-Collection="C:/Users/hwchiu/AppData/Roaming/Anki2/hwchiu/collection.anki2"
-Deck="Test"
 Anki="../../addToAnkiJapanese.py"
 
 def look_up_from_yahoo(word, Collection, Deck):
@@ -19,6 +18,10 @@ def look_up_from_yahoo(word, Collection, Deck):
     soup = BeautifulSoup(content, 'lxml')
     front_word = ""
     back_word = ""
+    furi = ""
+    furiChild = []
+    text = ""
+    textChild = []
     reading = ""
     cnt = 0
 
@@ -33,21 +36,26 @@ def look_up_from_yahoo(word, Collection, Deck):
         partEN = firstBlock.find('div', class_='concept_light-meanings')
 
         for j in partJP.find_all('span', class_='furigana'):
-            cntt = 0
+            furiCnt=0
             for child in j.children:
-                print(cntt)
-                print(child)
-                cntt = cntt + 1
+                furiChild.append(child.string)
+                furiCnt = furiCnt + 1
+            furiChild = list(filter(("\n").__ne__, furiChild))
+            print("furiChild = ",furiChild)
+            print(len(furiChild))
         for j in partJP.find_all('span', class_='text'):
-            cntt = 0
+            textCnt = 0
             for child in j.children:
-                print(cntt)
-                print(child)
-                cntt = cntt + 1
+                textChild.append(child.string)
+                textCnt = textCnt + 1
+            textChild = list(filter(("\n").__ne__, textChild))
+            for k in range(0,len(textChild)):
+                pass#textChild[k] = re.split(' |\n', textChild[k])
+            print("textChild = ",textChild)
+            print(len(textChild))
             front_word += j.get_text()
-
-
-
+        
+        
 
         for j in partEN.find_all('div', class_="meanings-wrapper"):
             for k in j.find_all('div', class_="meaning-wrapper"):
@@ -58,14 +66,14 @@ def look_up_from_yahoo(word, Collection, Deck):
                     back_word += q.get_text()
                     back_word += '<br>'
 
-    print('front card='+front_word)
-    print('back_card='+back_word)
+    #print('front card='+front_word)
+    #print('back_card='+back_word)
     if 0 == len(back_word):
         return
-    # if "Windows" == platform.system():
-    #     subprocess.run(['python', Anki, Collection, Deck, front_word, back_word, reading])
-    # else:
-    #     subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word, reading])
+    #if "Windows" == platform.system():
+    #    subprocess.run(['python', Anki, Collection, Deck, front_word, back_word, reading])
+    #else:
+    #    subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word, reading])
 
 count=0
 with open('config_J.json', encoding='utf-8') as data_file:
