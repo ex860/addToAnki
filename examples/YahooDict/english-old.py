@@ -48,16 +48,16 @@ def look_up_from_yahoo(word, Collection, Deck):
             POSclean = ""
         else:
             POSclean = '(' + partOfSpeech[i].get_text().split('.')[0] + '.)' + "<br>"
-        front_word += POSclean
+        front_word = front_word + POSclean
         for j in POScont[i].find_all('span', id='example', class_='example'):
-            front_word += str(cnt) + '. '
+            front_word = front_word + str(cnt) + '. '
             for k in range(0,len(j.contents)-1):
                 front_word += j.contents[k].string
             front_word += "<br>"
             cnt = cnt + 1 
-        back_word += POSclean
+        back_word = back_word + POSclean
         for j in POScont[i].find_all('h4'):
-            back_word += j.get_text() + '<br>'
+            back_word = back_word + j.get_text() + '<br>'
     print("")
     print('front_card={}'.format(front_word))
     print('back_card={}'.format(back_word))
