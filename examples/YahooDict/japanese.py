@@ -5,11 +5,14 @@ import subprocess
 import platform
 import datetime
 import json
+import wget
 import re
 from re import compile as _Re
 
 _unicode_chr_splitter = _Re( '(?s)((?:[\u2e80-\u9fff])|.)' ).split
 
+# Download_dir="C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.media/"
+Download_dir="/home/yu/.local/share/Anki2/YuHsien/collection.media/"
 Anki="../../addToAnkiJapanese.py"
 
 def look_up_from_yahoo(word, Collection, Deck):
@@ -40,6 +43,15 @@ def look_up_from_yahoo(word, Collection, Deck):
         partJP = firstBlock.find('div', class_='concept_light-wrapper')
         partEN = firstBlock.find('div', class_='concept_light-meanings')
 
+        status = partJP.find('div', class_='concept_light-status')
+        if(status != None):
+            audio = status.find('audio')
+            if(audio != None):
+                source = audio.find('source')
+                wget.download(source['src'], out=Download_dir+"Jp_"+word+".mp3")
+                # Insert the sound media into the card
+                front_word = "[sound:Jp_"+word+".mp3]" + word + "<br>"
+
         for j in partJP.find_all('span', class_='furigana'):
             furiCnt=0
             for child in j.children:
@@ -57,22 +69,18 @@ def look_up_from_yahoo(word, Collection, Deck):
                     if chr != '\n' and chr != ' ' and chr != '':
                         textList.append(chr)
             print("textList = ",textList)
-            # print(len(textChild))
-            front_word += j.get_text()
         
         for j in range(0,len(textList)):
             if(furiList[j] == None):
-                reading = reading + textList[j] 
+                reading += textList[j] 
             else:
-                reading = reading + " " + textList[j] + "[" + furiList[j] + "]" 
+                reading += " " + textList[j] + "[" + furiList[j] + "]" 
         for j in partEN.find_all('div', class_="meanings-wrapper"):
             for k in j.find_all('div', class_="meaning-wrapper"):
                 cnt = cnt + 1
-                back_word += str(cnt)
-                back_word += '. '
+                back_word += str(cnt) + '. '
                 for q in k.find_all('span', class_="meaning-meaning"):
-                    back_word += q.get_text()
-                    back_word += '<br>'
+                    back_word += q.get_text() + '<br>'
 
     #print('front card='+front_word)
     #print('back_card='+back_word)
