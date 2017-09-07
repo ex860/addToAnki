@@ -13,8 +13,9 @@ coll_file   = sys.argv[1]
 deck_name   = sys.argv[2]
 card_front  = sys.argv[3]
 card_back   = sys.argv[4]
+card_read   = sys.argv[5]
 # todo Not even this works. It refuses to embed the newlines in the Card
-card_back = re.sub(r"\\n", "\n", card_back)
+card_read = re.sub(r"\\n", "\n", card_read)
 
 # All Decks are in a single Collection
 print("Get Collection/Deck '"+coll_file+"/"+deck_name+"'")
@@ -40,6 +41,7 @@ print("Make a new Card for: "+card_front)
 fact = deck.newNote()
 fact['Expression'] = card_front
 fact['Meaning'] = card_back
+fact['Reading'] = card_read
 
 # Add Card to the Deck
 try:

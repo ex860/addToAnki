@@ -6,6 +6,9 @@ import platform
 import datetime
 import json
 import re
+from re import compile as _Re
+
+_unicode_chr_splitter = _Re( '(?s)((?:[\u2e80-\u9fff])|.)' ).split
 
 Anki="../../addToAnkiJapanese.py"
 
@@ -20,8 +23,10 @@ def look_up_from_yahoo(word, Collection, Deck):
     back_word = ""
     furi = ""
     furiChild = []
+    furiList = []
     text = ""
     textChild = []
+    textList = []
     reading = ""
     cnt = 0
 
@@ -40,23 +45,26 @@ def look_up_from_yahoo(word, Collection, Deck):
             for child in j.children:
                 furiChild.append(child.string)
                 furiCnt = furiCnt + 1
-            furiChild = list(filter(("\n").__ne__, furiChild))
-            print("furiChild = ",furiChild)
-            print(len(furiChild))
+            furiList = list(filter(("\n").__ne__, furiChild))
+            print("furiList = ",furiList)
         for j in partJP.find_all('span', class_='text'):
             textCnt = 0
             for child in j.children:
                 textChild.append(child.string)
                 textCnt = textCnt + 1
-            textChild = list(filter(("\n").__ne__, textChild))
             for k in range(0,len(textChild)):
-                pass#textChild[k] = re.split(' |\n', textChild[k])
-            print("textChild = ",textChild)
-            print(len(textChild))
+                for chr in _unicode_chr_splitter( textChild[k] ):
+                    if chr != '\n' and chr != ' ' and chr != '':
+                        textList.append(chr)
+            print("textList = ",textList)
+            # print(len(textChild))
             front_word += j.get_text()
         
-        
-
+        for j in range(0,len(textList)):
+            if(furiList[j] == None):
+                reading = reading + textList[j] 
+            else:
+                reading = reading + " " + textList[j] + "[" + furiList[j] + "]" 
         for j in partEN.find_all('div', class_="meanings-wrapper"):
             for k in j.find_all('div', class_="meaning-wrapper"):
                 cnt = cnt + 1
@@ -68,12 +76,13 @@ def look_up_from_yahoo(word, Collection, Deck):
 
     #print('front card='+front_word)
     #print('back_card='+back_word)
+    print("reading=",reading)
     if 0 == len(back_word):
         return
-    #if "Windows" == platform.system():
-    #    subprocess.run(['python', Anki, Collection, Deck, front_word, back_word, reading])
-    #else:
-    #    subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word, reading])
+    if "Windows" == platform.system():
+       subprocess.run(['python', Anki, Collection, Deck, front_word, back_word, reading])
+    else:
+       subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word, reading])
 
 count=0
 with open('config_J.json', encoding='utf-8') as data_file:
