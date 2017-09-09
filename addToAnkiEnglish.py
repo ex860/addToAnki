@@ -8,6 +8,19 @@ from anki import Collection as aopen
 if __name__ != '__main__' or len(sys.argv) < 5:
     sys.exit("Usage: "+sys.argv[0]+" '<collection path>' '<deck name>' '<card front>' '<card back>'")
 
+language_setting = {}
+
+def CheckLanguageSetting(models):
+    global language_setting
+    if models.byName('基本型(含反向的卡片)') is not None:
+        language_setting['Back'] = '背面'
+        language_setting['Front'] = '反面'
+        language_setting['Type'] = '基本型(含反向的卡片)'
+    else:
+        language_setting['Back'] = 'Back'
+        language_setting['Front'] = 'Front'
+        language_setting['Type'] = 'Basic (and reversed card)'
+
 # Mung arguments
 coll_file   = sys.argv[1]
 deck_name   = sys.argv[2]
@@ -23,8 +36,11 @@ deckId = deck.decks.id( deck_name )
 
 # todo Not sure why a simple 'select' doesnt do the model stuff for me...
 deck.decks.select( deckId )
+#check languages
+CheckLanguageSetting(deck.models)
+
 # Select the adequate language of your type of card
-basic_model = deck.models.byName('基本型(含反向的卡片)') 
+basic_model = deck.models.byName(language_setting['Type'])
 # basic_model = deck.models.byName('Basic (and reversed card)')
 basic_model['did'] = deckId
 deck.models.save( basic_model )
@@ -41,8 +57,8 @@ print("Deck has "+str(deck.cardCount())+" cards")
 print("Make a new Card for: "+card_front)
 fact = deck.newNote()
 # Select the adequate language of your type of card
-fact['正面'] = card_front # fact['Front'] = card_front
-fact['背面'] = card_back  # fact['Back'] = card_front
+fact[language_setting['Front']] = card_front # fact['Front'] = card_front
+fact[language_setting['Back']] = card_back  # fact['Back'] = card_front
 
 # Add Card to the Deck
 try:
