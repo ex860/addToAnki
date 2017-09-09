@@ -11,11 +11,9 @@ from re import compile as _Re
 
 _unicode_chr_splitter = _Re( '(?s)((?:[\u2e80-\u9fff])|.)' ).split
 
-# Download_dir="C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.media/"
-Download_dir="/home/yu/.local/share/Anki2/YuHsien/collection.media/"
 Anki="../../addToAnkiJapanese.py"
 
-def look_up_from_yahoo(word, Collection, Deck):
+def look_up_from_yahoo(word, Collection, Deck, Download_dir):
     # Eliminate the end of line delimiter
     word = word.splitlines()[0]
     wordUrl = urllib.parse.quote(word, safe='')
@@ -50,8 +48,9 @@ def look_up_from_yahoo(word, Collection, Deck):
                 source = audio.find('source')
                 wget.download(source['src'], out=Download_dir+"Jp_"+word+".mp3")
                 # Insert the sound media into the card
-                front_word = "[sound:Jp_"+word+".mp3]" + word + "<br>"
-
+                front_word += "[sound:Jp_"+word+".mp3]"
+        front_word += word + "<br>"
+        
         for j in partJP.find_all('span', class_='furigana'):
             furiCnt=0
             for child in j.children:
@@ -102,7 +101,7 @@ for profile in data["profiles"]:
 		# Get the word from each line in file
         for word in file:
             count += 1
-            look_up_from_yahoo(word, profile["collection"], profile["deck"])
+            look_up_from_yahoo(word, profile["collection"], profile["deck"], profile["download_dir"])
 
 end_time=datetime.datetime.now().replace(microsecond=0)
 print("-------------------------------------------------------------")        

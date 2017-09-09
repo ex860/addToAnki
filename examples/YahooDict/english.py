@@ -7,11 +7,9 @@ import datetime
 import json
 import wget
 
-# Download_dir="C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.media/"
-Download_dir="/home/yu/.local/share/Anki2/YuHsien/collection.media/"
 Anki="../../addToAnkiEnglish.py"
 
-def look_up_from_yahoo(word, Collection, Deck):
+def look_up_from_yahoo(word, Collection, Deck, Download_dir):
     # Eliminate the end of line delimiter
     word = word.splitlines()[0]
     wordUrl = urllib.parse.quote(word, safe='')
@@ -31,10 +29,11 @@ def look_up_from_yahoo(word, Collection, Deck):
     for soundCnt in range(0,len(sound['sound_url_1'])):
         if(bool(sound['sound_url_1'][soundCnt]) == True):
             wget.download(sound['sound_url_1'][soundCnt]["mp3"], out=Download_dir+"Py_"+word+".mp3")
+            front_word += "[sound:Py_"+word+".mp3]"
             break
 
     # Insert the sound media into the card
-    front_word = "[sound:Py_"+word+".mp3]" + word + "<br>"
+    front_word += word + "<br>"
 
     explain = soup.find('div', class_='explain')
     partOfSpeech = explain.find_all('div', class_='compTitle')
@@ -79,7 +78,7 @@ for profile in data["profiles"]:
 		# Get the word from each line in file
         for word in file:
             count += 1
-            look_up_from_yahoo(word, profile["collection"], profile["deck"])
+            look_up_from_yahoo(word, profile["collection"], profile["deck"], profile["download_dir"])
 
 end_time=datetime.datetime.now().replace(microsecond=0)
 print("--------------------------")        
