@@ -3,7 +3,8 @@
  	 	{
 	        "file":"input_J",
 	        "deck":"日文",
-	        "collection":"/home/yu/.local/share/Anki2/YuHsien/collection.anki2"
+	        "collection":"C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.anki2",
+            "download_dir":"C:/Users/Yu-Hsien/AppData/Roaming/Anki2/YuHsien/collection.media/"
 	   	}
     ]
 }
