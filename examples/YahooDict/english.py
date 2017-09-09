@@ -23,7 +23,10 @@ def look_up_from_yahoo(word, Collection, Deck, Download_dir):
     print('<<'+word+'>>')
     print(" ")
     # Get the URL of the sound media
-    sound = json.loads(soup.find('span', id='iconStyle').get_text())
+    soup_result = soup.find('span', id='iconStyle')
+    if soup_result is None:
+        return False
+    sound = json.loads(soup_result.get_text())
     
     # Download the sound media and store at the specific directory (%username%/collection.media) and with a specific file name (Py_%word%.mp3)
     for soundCnt in range(0,len(sound['sound_url_1'])):
@@ -62,11 +65,12 @@ def look_up_from_yahoo(word, Collection, Deck, Download_dir):
     print('back_card={}'.format(back_word))
 
     if 0 == len(back_word):
-        return
+        return False
     if "Windows" == platform.system():
         subprocess.run(['python', Anki, Collection, Deck, front_word, back_word])
     else:
         subprocess.run(['python3', Anki, Collection, Deck, front_word, back_word])
+    return True
 
 count=0
 with open('config_E.json', encoding='utf-8') as data_file:
@@ -77,8 +81,8 @@ for profile in data["profiles"]:
     with open(profile["file"], "r", encoding='utf-8') as file:
 		# Get the word from each line in file
         for word in file:
-            count += 1
-            look_up_from_yahoo(word, profile["collection"], profile["deck"], profile["download_dir"])
+            if look_up_from_yahoo(word, profile["collection"], profile["deck"], profile["download_dir"]) is True:
+                count +=1
 
 end_time=datetime.datetime.now().replace(microsecond=0)
 print("--------------------------")        
