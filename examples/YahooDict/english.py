@@ -18,10 +18,6 @@ def look_up_from_yahoo(word, Collection, Deck, Download_dir):
     soup = BeautifulSoup(content, 'lxml')
     front_word = ""
     back_word = ""
-
-    print(" ")
-    print('<<'+word+'>>')
-    print(" ")
     
     # Avoid the empty string
     if(word == ""):
@@ -31,6 +27,15 @@ def look_up_from_yahoo(word, Collection, Deck, Download_dir):
     wrongSpelling = soup.find('div', class_='compText mb-15 fz-m fc-4th')
     if wrongSpelling is not None:
         return False
+    
+    # If there is a typo, maybe the Yahoo dict will detect
+    checkTypo = soup.find("span", id="term").get_text()
+    if(checkTypo != word):
+        word = checkTypo
+    
+    print("-------------------------------------------------------------")
+    print('<<'+word+'>>')
+    print(" ")
     
     # Get the URL of the sound media
     soup_result = soup.find('span', id='iconStyle')
@@ -42,7 +47,7 @@ def look_up_from_yahoo(word, Collection, Deck, Download_dir):
                 wget.download(sound['sound_url_1'][soundCnt]["mp3"], out=Download_dir+"Py_"+word+".mp3")
                 front_word += "[sound:Py_"+word+".mp3]"
                 break
-
+                
     # Insert the sound media into the card
     front_word += word + "<br>"
 
@@ -93,5 +98,5 @@ for profile in data["profiles"]:
                 count +=1
 
 end_time=datetime.datetime.now().replace(microsecond=0)
-print("--------------------------")        
+print("-------------------------------------------------------------")        
 print("Takes {} to add {} cards".format(end_time - start_time ,count))
