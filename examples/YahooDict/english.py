@@ -22,18 +22,26 @@ def look_up_from_yahoo(word, Collection, Deck, Download_dir):
     print(" ")
     print('<<'+word+'>>')
     print(" ")
+    
+    # Avoid the empty string
+    if(word == ""):
+        return False
+        
+    # If the spelling of word is wrong, the program will skip it    
+    wrongSpelling = soup.find('div', class_='compText mb-15 fz-m fc-4th')
+    if wrongSpelling is not None:
+        return False
+    
     # Get the URL of the sound media
     soup_result = soup.find('span', id='iconStyle')
-    if soup_result is None:
-        return False
-    sound = json.loads(soup_result.get_text())
-    
-    # Download the sound media and store at the specific directory (%username%/collection.media) and with a specific file name (Py_%word%.mp3)
-    for soundCnt in range(0,len(sound['sound_url_1'])):
-        if(bool(sound['sound_url_1'][soundCnt]) == True):
-            wget.download(sound['sound_url_1'][soundCnt]["mp3"], out=Download_dir+"Py_"+word+".mp3")
-            front_word += "[sound:Py_"+word+".mp3]"
-            break
+    if soup_result is not None:
+        sound = json.loads(soup_result.get_text())
+        # Download the sound media and store at the specific directory (%username%/collection.media) and with a specific file name (Py_%word%.mp3)
+        for soundCnt in range(0,len(sound['sound_url_1'])):
+            if(bool(sound['sound_url_1'][soundCnt]) == True):
+                wget.download(sound['sound_url_1'][soundCnt]["mp3"], out=Download_dir+"Py_"+word+".mp3")
+                front_word += "[sound:Py_"+word+".mp3]"
+                break
 
     # Insert the sound media into the card
     front_word += word + "<br>"
