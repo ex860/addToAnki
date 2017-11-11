@@ -46,7 +46,7 @@ def look_up_from_yahoo(word, Collection, Deck, Download_dir):
             audio = status.find('audio')
             if(audio != None):
                 source = audio.find('source')
-                wget.download(source['src'], out=Download_dir+"Jp_"+word+".mp3")
+                wget.download('http:'+source['src'], out=Download_dir+"Jp_"+word+".mp3")
                 # Insert the sound media into the card
                 front_word += "[sound:Jp_"+word+".mp3]"
         front_word += word + "<br>"
